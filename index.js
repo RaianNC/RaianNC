@@ -93,12 +93,5 @@ client.on('messageReactionRemove', async(reaction, user) => {
     }
 })
 
-const distube = require("distube");
-const player = new distube(client);
-player.on("playSong", (message, queue, song) => {
-    message.channel.send(`${song.name} has started playing`);
-});
-client.player = player;
-
 // you may want to change this to "client.login(token)"
 client.login(process.env.RAIANBOT_TOKEN)
