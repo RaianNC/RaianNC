@@ -92,4 +92,5 @@ client.on('messageReactionRemove', async(reaction, user) => {
         }
     }
 })
-client.login(token)
+// you may want to change this to "client.login(token)"
+client.login(process.env.RAIANBOT_TOKEN)
