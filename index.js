@@ -15,8 +15,6 @@ client.categories = fs.readdirSync("./commands/");
 }); 
 const { default: chalk } = require("chalk");
 const { table } = require("table");
-const client = require("../index");
-
 client.on("ready", () => {
   const data = [
     ["LOGGED IN AS", `${chalk.red.bold(client.user.tag)}`, "The bot that I am logged in as."],
