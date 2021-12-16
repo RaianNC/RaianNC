@@ -13,29 +13,48 @@ client.categories = fs.readdirSync("./commands/");
 ["command"].forEach(handler => {
     require(`./handlers/${handler}`)(client);
 }); 
-const chalk = require('chalk') //Chalk Package
-client.on("ready", async () => {
-  console.clear();
-  console.log(chalk.green.bold("Success!"))
-  console.log(chalk.gray("Connected To"), chalk.yellow(`${client.user.tag}`));
-  console.log(
-    chalk.white("Watching"),
-    chalk.red(`${client.guilds.cache.reduce((a, b) => a + b.memberCount, 0)}`),
-    chalk.white(`${client.guilds.cache.reduce((a, b) => a + b.memberCount, 0) > 1 ? "Users," : "User,"}`),
-    chalk.red(`${client.guilds.cache.size}`),
-    chalk.white(`${client.guilds.cache.size > 1 ? "Servers." : "Server."}`)
-  )
-  console.log(
-    chalk.white(`Prefix:` + chalk.red(` ${prefix}`)),
-    chalk.white("||"),
-    chalk.red(`${client.commands.size}`),
-    chalk.white(`Commands`)
-  );
-  console.log("")
-  console.log(chalk.red.bold("——————————[Statistics]——————————"))
-  console.log(chalk.gray(`Running on Node ${process.version} on ${process.platform} ${process.arch}`))
-  console.log(chalk.gray(`Memory: ${(process.memoryUsage().rss / 1024 / 1024).toFixed(2)} MB RSS\n${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)} MB`))
-})
+const { default: chalk } = require("chalk");
+const { table } = require("table");
+const client = require("../index");
+
+client.on("ready", () => {
+  const data = [
+    ["LOGGED IN AS", `${chalk.red.bold(client.user.tag)}`, "The bot that I am logged in as."],
+    ["SERVERS", `${chalk.yellow.bold(client.guilds.cache.size.toLocaleString())}`, "The amount of servers that I am in."],
+    ["USERS", `${chalk.green.bold(client.users.cache.size.toLocaleString())}`, "The amount of users using my commands."],
+    ["PREFIX", `${chalk.cyan.bold(client.config.prefix)}`, "The prefix to use to run my commands"],
+    ["COMMANDS", `${chalk.blue.bold(client.commands.size.toLocaleString())}`, "Commands Loaded"]
+  ]
+  client.user.setActivity({ name: `${client.config.prefix}`, type: "PLAYING" })
+  
+  const config = {
+    border: {
+      topBody: `─`,
+      topJoin: `┬`,
+      topLeft: `┌`,
+      topRight: `┐`,
+  
+      bottomBody: `─`,
+      bottomJoin: `┴`,
+      bottomLeft: `└`,
+      bottomRight: `┘`,
+  
+      bodyLeft: `│`,
+      bodyRight: `│`,
+      bodyJoin: `│`,
+  
+      joinBody: `─`,
+      joinLeft: `├`,
+      joinRight: `┤`,
+      joinJoin: `┼`
+    }, 
+    header: {
+      alignment: 'center',
+      content: "CLIENT DATA"
+    }
+  };
+  console.log(table(data, config))
+});
 
 client.on('guildMemberAdd', member =>{
     let welcomeRole = member.guild.roles.cache.find(role => role.name === 'member');
